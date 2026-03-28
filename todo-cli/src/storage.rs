@@ -72,19 +72,6 @@ impl Storage {
         Err(anyhow::anyhow!("Task with ID {} not found", task_id))
     }
 
-    pub fn update_task(&mut self, updated_task: Task) -> Result<()> {
-        let mut tasks = self.load_tasks()?;
-        
-        for task in tasks.iter_mut() {
-            if task.id == updated_task.id {
-                *task = updated_task;
-                return self.save_tasks(&tasks);
-            }
-        }
-        
-        Err(anyhow::anyhow!("Task with ID {} not found", updated_task.id))
-    }
-
     fn load_tasks(&self) -> Result<Vec<Task>> {
         let file = File::open(&self.file_path)?;
         let reader = BufReader::new(file);

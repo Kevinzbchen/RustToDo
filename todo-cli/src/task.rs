@@ -29,11 +29,6 @@ impl Task {
         self.updated_at = Utc::now().to_rfc3339();
     }
 
-    pub fn update_description(&mut self, description: String) {
-        self.description = description;
-        self.updated_at = Utc::now().to_rfc3339();
-    }
-
     pub fn created_at_datetime(&self) -> Option<DateTime<Utc>> {
         DateTime::parse_from_rfc3339(&self.created_at)
             .ok()
@@ -53,6 +48,7 @@ impl Task {
 
         if let Some(created_at) = self.created_at_datetime() {
             let now = Utc::now();
+            // Consider a task overdue if it's more than 7 days old and not completed
             let seven_days_ago = now - Duration::days(7);
             created_at < seven_days_ago
         } else {
@@ -82,6 +78,7 @@ impl std::fmt::Display for Task {
         };
 
         let description = self.description.color(description_color);
+
         let created_str = self.created_at_datetime()
             .map(|dt| dt.format("%Y-%m-%d %H:%M:%S").to_string())
             .unwrap_or_else(|| self.created_at.clone());
