@@ -1,5 +1,6 @@
 use crate::storage::Storage;
 use anyhow::Result;
+use colored::*;
 use reqwest::Client;
 use serde_json::json;
 
@@ -10,23 +11,38 @@ pub async fn enhance_task_description(task_id: &str, storage: &Storage) -> Resul
     // Get the task from storage
     let task = storage.get_task_by_id(task_id)?;
     
+    println!("{}: {}", "Original task".yellow(), task.description);
+
     // For now, we'll use a placeholder implementation
     // In a real implementation, you would need to:
     // 1. Get an API key from DeepSeek
     // 2. Make an actual API call
     // 3. Parse the response
     
-    // Placeholder implementation - just returns a slightly enhanced version
-    let enhanced = format!(
-        "{} (Enhanced with AI suggestions)",
-        task.description
-    );
-    
+    // Placeholder implementation - simulates AI enhancement
+    let enhanced = if task.description.to_lowercase().contains("learn") {
+        format!("{} - Break down into weekly study goals with practice exercises",
+               task.description)
+    } else if task.description.to_lowercase().contains("buy") ||
+              task.description.to_lowercase().contains("groceries") {
+        format!("{} - Create a shopping list and check pantry inventory first",
+               task.description)
+    } else if task.description.to_lowercase().contains("write") ||
+              task.description.to_lowercase().contains("document") {
+        format!("{} - Outline key sections first, then write introduction and conclusion",
+               task.description)
+    } else {
+        format!("{} - Make it SMART (Specific, Measurable, Achievable, Relevant, Time-bound)",
+               task.description)
+    };
+
+    println!("{}: {}", "AI-enhanced task".green(), enhanced);
+
     // In a real implementation, you would update the task with the enhanced description
     // let mut updated_task = task.clone();
     // updated_task.update_description(enhanced.clone());
     // storage.update_task(updated_task)?;
-    
+
     Ok(enhanced)
 }
 
@@ -34,7 +50,7 @@ pub async fn enhance_task_description(task_id: &str, storage: &Storage) -> Resul
 #[allow(dead_code)]
 async fn enhance_with_deepseek_api(description: &str, api_key: &str) -> Result<String> {
     let client = Client::new();
-    
+
     let request_body = json!({
         "model": DEEPSEEK_MODEL,
         "messages": [
@@ -50,7 +66,7 @@ async fn enhance_with_deepseek_api(description: &str, api_key: &str) -> Result<S
         "max_tokens": 100,
         "temperature": 0.7
     });
-    
+
     let response = client
         .post(DEEPSEEK_API_URL)
         .header("Authorization", format!("Bearer {}", api_key))
@@ -58,14 +74,14 @@ async fn enhance_with_deepseek_api(description: &str, api_key: &str) -> Result<S
         .json(&request_body)
         .send()
         .await?;
-    
+
     if response.status().is_success() {
         let response_json: serde_json::Value = response.json().await?;
         let enhanced_description = response_json["choices"][0]["message"]["content"]
             .as_str()
             .unwrap_or(description)
             .to_string();
-        
+
         Ok(enhanced_description)
     } else {
         let error_text = response.text().await?;

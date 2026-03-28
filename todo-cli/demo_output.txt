@@ -1,0 +1,88 @@
+=== Rust ToDo CLI with Colored Output Demo ===
+
+1. Adding tasks:
+   $ todo add "Complete project documentation"
+   [32mTask added successfully![0m
+   
+   $ todo add "Review PR #42"
+   [32mTask added successfully![0m
+   
+   $ todo add "Fix critical bug in auth module"
+   [32mTask added successfully![0m
+
+2. Listing tasks (initial state):
+   $ todo list
+   [1;36m=== Your Tasks ===[0m
+   
+   [36mTask #1[0m [[33m✗[0m] [33mComplete project documentation[0m (ID: ...)
+     Created: 2026-03-28 12:00:00
+     Updated: 2026-03-28 12:00:00
+   
+   [36mTask #2[0m [[33m✗[0m] [33mReview PR #42[0m (ID: ...)
+     Created: 2026-03-28 12:00:05
+     Updated: 2026-03-28 12:00:05
+   
+   [36mTask #3[0m [[33m✗[0m] [33mFix critical bug in auth module[0m (ID: ...)
+     Created: 2026-03-28 12:00:10
+     Updated: 2026-03-28 12:00:10
+   
+   [1;36m=== Summary ===[0m
+     [32mCompleted[0m: 0
+     [33mPending[0m: 3
+     [31mOverdue[0m: 0
+     [36mTotal[0m: 3
+
+3. Completing a task:
+   $ todo complete <task-id-2>
+   [32mTask[0m [32m<task-id-2> marked as complete![0m
+
+4. Listing tasks after completion:
+   $ todo list
+   [1;36m=== Your Tasks ===[0m
+   
+   [36mTask #1[0m [[33m✗[0m] [33mComplete project documentation[0m (ID: ...)
+     ...
+   
+   [36mTask #2[0m [[32m✓[0m] [32mReview PR #42[0m (ID: ...)
+     ...
+   
+   [36mTask #3[0m [[33m✗[0m] [33mFix critical bug in auth module[0m (ID: ...)
+     ...
+   
+   [1;36m=== Summary ===[0m
+     [32mCompleted[0m: 1
+     [33mPending[0m: 2
+     [31mOverdue[0m: 0
+     [36mTotal[0m: 3
+
+5. AI enhancement:
+   $ todo enhance <task-id-1>
+   [33mOriginal task[0m: Complete project documentation
+   [32mAI-enhanced task[0m: Complete project documentation - Outline key sections first, then write introduction and conclusion
+   [36mEnhanced task description[0m: Complete project documentation - Outline key sections first, then write introduction and conclusion
+
+6. Deleting a task:
+   $ todo delete <task-id-3>
+   [31mTask[0m [31m<task-id-3> deleted![0m
+
+7. Final list:
+   $ todo list
+   [1;36m=== Your Tasks ===[0m
+   
+   [36mTask #1[0m [[33m✗[0m] [33mComplete project documentation[0m (ID: ...)
+     ...
+   
+   [36mTask #2[0m [[32m✓[0m] [32mReview PR #42[0m (ID: ...)
+     ...
+   
+   [1;36m=== Summary ===[0m
+     [32mCompleted[0m: 1
+     [33mPending[0m: 1
+     [31mOverdue[0m: 0
+     [36mTotal[0m: 2
+
+=== Color Legend ===
+• [32mGreen[0m: Completed tasks, success messages, AI-enhanced output
+• [33mYellow[0m: Pending tasks, original task in AI enhancement
+• [31mRed[0m: Overdue tasks, delete confirmation
+• [36mCyan[0m: Headers, task numbers, informational messages
